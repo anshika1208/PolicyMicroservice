@@ -1,0 +1,35 @@
+﻿apiVersion: apps/v1
+
+kind: Deployment
+metadata:
+  name: policymicroservice-deployment
+  labels:
+    app: PolicyMicroservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: PolicyMicroservice
+  template:
+    metadata:
+      labels:
+        app: PolicyMicroservice
+    spec:
+      containers:
+      - name: policycontainerregistry1
+        image: policycontainerregistry1.azurecr.io/policycontainerrepo:latest
+        ports:
+        - containerPort: 8080
+      imagePullSecrets:
+      - name: webapisvcsecret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: policymicroservicesvc
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: PolicyMicroservice
